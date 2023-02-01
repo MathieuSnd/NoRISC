@@ -1,6 +1,6 @@
-[submodule "cva6"]
-	path = cva6
-	url = https://github.com/openhwgroup/cva6/
-[submodule "riscv-formal"]
-	path = riscv-formal
-	url = https://github.com/YosysHQ/riscv-formal
+[submodule "paf-formal/paf"]
+	path = paf-formal/paf
+	url = git@github.com:MathieuSnd/paf-riscv.git
+[submodule "paf-formal/riscv-formal"]
+	path = paf-formal/riscv-formal
+	url = git@github.com:MathieuSnd/riscv-formal.git
