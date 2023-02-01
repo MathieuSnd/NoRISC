@@ -7,8 +7,8 @@ To run the formal tests, run the following commands:
 
 ```
 git clone --recursive https://github.com/MathieuSnd/NoRISC
-cd NoRISC/paf_formal
-mv verif-wrapper riscv-formal/cores/paf
+cd NoRISC
+mv paf-formal/verif-wrapper riscv-formal/cores/paf
 cd riscv-formal/cores/paf
 python3 ../../checks/genchecks.py
 make -C check 

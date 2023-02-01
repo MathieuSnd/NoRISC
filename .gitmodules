@@ -1,6 +1,3 @@
 [submodule "paf-formal/paf"]
 	path = paf-formal/paf
 	url = git@github.com:MathieuSnd/paf-riscv.git
-[submodule "paf-formal/riscv-formal"]
-	path = paf-formal/riscv-formal
-	url = git@github.com:MathieuSnd/riscv-formal.git
