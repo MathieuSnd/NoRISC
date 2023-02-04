@@ -26,7 +26,7 @@ Model checking works by exhaustively exploring the state space of the system und
 
 **Unbounded model checking** searches for any reachable state that violates the specification. It usually target small systems for which the set of reachable states is handlable, whereas it is not for big end-to-end systems, like advanced processor cores. Indeed, the size of the set of reachable states grows exponnentially with the size of the system. Thus, **bounded model checking** is often used instead to find bugs. The principle is to restrict the set of states to check to the set of reachable states after a few clock cycles. The number of considered clock cycles usually depends on the pipeline depth of the processor core. This method is sometimes called *bug hunting*: it does not prove correctness of the design overtime, though, this method is still very efficient at finding bugs.
 
-The model checking problem is equivalent to a satifiability (SAT) problem. Model checkers usually create a logic formula that should be unsatifiable if and only if the design is correct. It then involves a SAT solver to prove that the formula is unsatisfiable and thus prove correctness of the design. Modern model checkers speed up the solving process by construsting a SMT problem instead of a SAT one.
+The model checking problem is equivalent to a satisfiability (SAT) problem. Model checkers usually create a logic formula that should be unsatifiable if and only if the design is correct. It then involves a SAT solver to prove that the formula is unsatisfiable and thus prove correctness of the design. Modern model checkers speed up the solving process by construsting a SMT problem instead of a SAT one.
 
 
 

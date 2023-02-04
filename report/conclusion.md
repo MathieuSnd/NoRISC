@@ -103,7 +103,14 @@ Further work can be done to fully prove the core, using __unbounded model checki
 
 ### riscv-formal
 
-`riscv-formal` is a promising tool to help 
-
+`riscv-formal` is a promising open-source RISC-V bounded model checking verification tool. Though it lacks of support for multicore architechtures. 
 
 ### PAF core
+
+As stated in the synthesis analysis section, the PAF core implementation is to be imprpoved, by working on:
+
+- a better decoding in the `ID` stage to decrease the area.
+- the addition of a pipeline stall when a byte load or a half-word load instruction is followed by `JALR` to improve the critical path.
+- the addition of a new pipeline stage to improve the critical path.
+
+It also lacks of an interrupt mechanism.

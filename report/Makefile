@@ -6,6 +6,7 @@ OUTLINE = \
 	introduction.md \
 	paf.md \
 	B.md \
+	axi.md \
 	conclusion.md \
 	references.md
 

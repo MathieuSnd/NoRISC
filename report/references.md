@@ -13,5 +13,7 @@
 
 
 
-Post-Silicon and Runtime Verification for Modern Processors, Springer, by Ilya Wagner Valeria Bertacco,
+5. Post-Silicon and Runtime Verification for Modern Processors, Springer, by Ilya Wagner Valeria Bertacco,
 Springer Science+Business Media, LLC 2011 
+
+6. AMBA AXI and ACE Protocol Specification, ARM, 2011, pp. 37-42
