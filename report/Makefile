@@ -3,10 +3,11 @@
 
 OUTLINE = \
 	abstract.md \
+	summary.md \
 	introduction.md \
+	axi.md \
 	paf.md \
 	B.md \
-	axi.md \
 	conclusion.md \
 	references.md
 
