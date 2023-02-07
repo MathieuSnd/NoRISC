@@ -1,4 +1,4 @@
-
+# References
 
 1. M. Sheeran, S. Singh, and G. Stålmarck, ‘Checking Safety Properties Using Induction and a SAT-Solver’, in Proceedings of the Third International Conference on Formal Methods in Computer-Aided Design, 2000, pp. 108–125.
 
