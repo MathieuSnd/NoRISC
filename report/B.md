@@ -16,7 +16,7 @@ The Zbs instructions provide operations to set, clear, invert or extract a singl
 
 ### 3.4.3. Zbc (Carry-less Multiplication)
 
-The Zbc extension provides carry-less multiplication, a multiplication operation in the polynomial ring over GF(2). This extension includes instructions clmul and clmulh to produce the lower and upper half of the carry-less product respectively. The instruction clmulr produces bits 2✕XLEN−2:XLEN-1 of the carry-less product. This extension can be used for efficient cryptography and hashing operations.
+The Zbc extension provides carry-less multiplication, a multiplication operation in the polynomial ring over GF(2). This extension includes instructions clmul and clmulh to produce the lower and upper half of the carry-less product respectively. The instruction clmulr produces bits 62:31 of the carry-less product. This extension can be used for efficient cryptography and hashing operations.
 
 
 
@@ -66,10 +66,10 @@ They are implemented using the regular ALU's full adder that is already used for
 ### 3.6.2. Implementing Zbb
 
 Simple Zbb operations are implemented naively:
-logical and, or and xor with negate, reverse byte order, byte granule bitwise OR-Combine, and sign- and zero- extend operations. Other instructions required area and timing considerations to be efficiently implemented.
+logical and, or and xor with negate, reverse byte order, byte granule bit-wise OR-Combine, and sign- and zero- extend operations. Other instructions required area and timing considerations to be efficiently implemented.
 
 
-### 3.6.3. Population count openrations
+### 3.6.3. Population count operations
 
 Operations that count bits (cpop, ctz and clz) are done in a single cycle.
 the data path for the computation is a tree that operates on a part of the word, and compresses to give the result.

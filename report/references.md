@@ -10,10 +10,9 @@
 
 4. Wagner I., Bertacco V., (2011). 'Verification of a Modern Processor'. In 'Post-Silicon and Runtime Verification for Modern Processors' (p. 4). New York: Springer. 
 
+5. Wagner I., Bertacco V., (2011). 'Verification of a Modern Processor'. In 'Post-Silicon and Runtime Verification for Modern Processors' (pp. 19-23). New York: Springer. 
+
+6. AMBA AXI and ACE Protocol Specification, ARM, 2011, (pp. 37-42)
 
 
-
-5. Post-Silicon and Runtime Verification for Modern Processors, Springer, by Ilya Wagner Valeria Bertacco,
-Springer Science+Business Media, LLC 2011 
-
-6. AMBA AXI and ACE Protocol Specification, ARM, 2011, pp. 37-42
+7. Cimatti A., Griggio A, Joost Schaafsma A., Sebastiani R, (2013). 'The MathSAT5 SMT Solver'. in 'International Conference on Tools and Algorithms for the Construction and Analysis of Systems'

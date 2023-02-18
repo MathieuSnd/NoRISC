@@ -1,13 +1,12 @@
+# NoRisc: Exploration of open-source formal verification tools for RISC-V processor cores
+
+_by Mathieu Serandour, supervised by Ulrich Khune_
+
+---
+
 # Abstract
 
-The RISC-V instruction set architecture (ISA) has been designed to be highly modular. This makes it an ideal platform for processor formal verification, which is a critical step in the design of processor cores. This report presents the formal verification of the PAF Core that was used as the basis for this research. This core is an open-source RISC-V processor core written as a university project at Telecom Paris by Florian Tarazona and Erwan Glazsiou. The PAF Core was found to be quite buggy and in need of significant modifications to be compatible with the riscv-formal tool, which is used to prove that a processor is correct according to the RISC-V ISA.
-
-The formal verification of the PAF Core covered the base RISC-V ISA (rv32i) and the B extension (Bit manipulation). The core was modified to implement trapping, which detects ill-formed instructions and unaligned accesses. Several bugs were found and fixed such as missing instructions, pipeline stalls not properly implemented, bad forwarding and load instruction triggering trap on miss-aligned addresses.
-
-In addition to the formal verification of the PAF Core, the report also includes the formal verification of an AXI-lite random memory controller, which I used to formally verify AXI-lite variant of the picorv32 core.
-
-The report concludes with an analysis of the contributions of the research, including a timing and area analysis of the PAF processor. The results of this work provide a strong foundation for further improvements to the PAF Core.  
-
+The RISC-V instruction set architecture (ISA) has been designed to be highly modular. This makes it an ideal platform for processor formal verification, which is a critical step in the design of processor cores. This report presents the formal verification of the PAF core, an open-source rv32i core written by university students, the implementation and verification of the Bit Manipulation RISC-V extension on this core, and the contribution to the `riscv-formal` tool to support this extension. Moreover, the report includes the formal verification of an AXI-lite random memory controller, which I used to formally verify AXI-lite variant of the picorv32 core. We conclude with an analysis of the contributions of the research, including a timing and area analysis of the modified core. The results of this work provide a strong foundation for further improvements to the PAF Core.  
 
 # Report Summary 
 
@@ -46,32 +45,29 @@ __4. Conclusions__
 
 ## 1.1. Formal Verifications of Processor Cores
 
+### 1.1.1. Context behind Verification
 
-Verification is a critical step in processor design. It was in the 1990s, as for the MIPS 4000, each additional month of design time would cost between $3 million and $8 million. Besides, 27% of the design time was devoted to verification and testing[3]. It is still the case, nowadays the verification process has become considerably more extensive than design efforts[4]. 
-
-
-Most bugs can be found using simulation based verification: The design under test is simulated in a test bench  that gives inputs and checks coherency of the design's outputs.
-
-Another method that is usually used to find more bugs is to simulate the design, with randomly generated inputs. This method can
-find cases the usual test bench  doesn't consider, thus find more bugs. This function is efficient at finding bugs though it does not
-give any proof of correctness. Even after simulating during days on random inputs, one untested input can still lead to a state that violates the specification. 
-
-This is where formal verification comes to play. it is a process of mathematically proving the correctness of a design, in this case, a processor design. The verification process of the pentium 4 involved formal verification, which made possible to find around 200 bugs that weren't emphasized by simulation based verification methods.
+Verification is a critical step in processor design, and its relative importance has grown as designs become more complex[4]. In the 1990s, for the MIPS 4000, each additional month of design time cost between $3 million and $8 million, with 27% of design time devoted to verification and testing[3]. The importance of verification was demonstrated in 1995 when a bug was found in the Intel Pentium processor, costing Intel approximately $475 million to replace the sold processors[4].
 
 
+Bugs can be found through simulation-based verification by using a test bench to input data and check the coherency of the design's outputs. Another approach is to simulate the design using randomly generated inputs, which can uncover cases that the test bench misses. However, even after simulating for days with random inputs, one untested input can still lead to a state that violates the specification. This is where formal verification comes into play.
 
-The principle of hardware formal verification is to define a formal specification of the design, and then use mathematical logic and automated theorem provers to prove that the design meets that specification. This can provide a high degree of confidence that the design is free from certain classes of errors and will function as intended.
-
-The first step is to define a formal specification of the design. This typically involves writing a mathematical model of the design that defines its behavior in terms of input and output relations. The model is usually written in a formal language, such as first-order logic or temporal logic.
-
-There are serval verification methodologies, such as **model checking** and **theorem proving**. While theorem proving gives stronger proofs of correctness, it is difficult to automate and highly relly on the design under verification. 
-
-Model checking works by exhaustively exploring the state space of the system under consideration and looking for a state that violates the specification. In model checking, a mathematical model of the system is created, and a formal specification is defined in terms of properties that the system should satisfy. The model checker then explores the state space of the system, using algorithms to check that the system satisfies the specification. Model checkers can check both safety properties (properties that must always hold) and liveness properties (properties that eventually hold).
+## 1.1.2. Formal Verification
 
 
-**Unbounded model checking** searches for any reachable state that violates the specification. It usually target small systems for which the set of reachable states is handleable, whereas it is not for big end-to-end systems, like advanced processor cores. Indeed, the size of the set of reachable states grows exponentially with the size of the system. Thus, **bounded model checking** is often used instead to find bugs. The principle is to restrict the set of states to check to the set of reachable states after a few clock cycles. The number of considered clock cycles usually depends on the pipeline depth of the processor core. This method is sometimes called *bug hunting*: it does not prove correctness of the design overtime, though, this method is still very efficient at finding bugs.
+The principle behind hardware formal verification is to define a formal specification of the design and then use mathematical logic and automated theorem provers to prove that the design meets that specification. This provides a high degree of confidence that the design is free from certain types of errors and will function as intended. The first step is to define a formal specification of the design, usually through writing a mathematical model of the design that defines its behavior in terms of input and output relations, using a formal language such as first-order logic or temporal logic[5].
 
-The model checking problem is equivalent to a satisfiability (SAT) problem. Model checkers usually create a logic formula that should be unsatisfiable if and only if the design is correct. It then involves a SAT solver to prove that the formula is unsatisfiable and thus prove correctness of the design. Modern model checkers speed up the solving process by constructing a Satisfiability Modulo Theories (SMT) problem instead of a SAT one. SMT problems are similar to SAT but are easier to solve for bit vector operations, like additions.
+There are serval verification methodologies, including **model checking** and **theorem proving**. While theorem proving gives stronger proofs of correctness, it is difficult to automate and highly relly on the design under verification[5]. 
+
+Model checking works by exhaustively exploring the state space of the system under consideration and looking for a state that violates the specification. In model checking, a mathematical model of the system is created, and a formal specification is defined in terms of properties that the system should satisfy. The model checker then explores the state space of the system, using algorithms to check that the system satisfies the specification [1][2][5]. Model checkers can check both safety properties (properties that must always hold) and liveness properties (properties that eventually hold).
+
+
+**Unbounded model checking** searches for any reachable state that violates the specification. It usually target small systems for which the set of reachable states is handleable, whereas it is not for big end-to-end systems, like advanced processor cores. Indeed, the size of the set of reachable states grows exponentially with the size of the system. Thus, **bounded model checking** is often used instead to find bugs. The principle is to restrict the set of states to check to the set of reachable states after a few clock cycles. The number of considered clock cycles usually depends on the pipeline depth of the processor core. This method is sometimes called *bug hunting*: it does not prove correctness of the design overtime, though, this method is still very efficient at finding bugs[5].
+
+The model checking problem is equivalent to a satisfiability (SAT) problem. Model checkers usually create a logic formula that should be unsatisfiable if and only if the design is correct. It then involves a SAT solver to prove that the formula is unsatisfiable and thus prove correctness of the design. Modern model checkers speed up the solving process by constructing a Satisfiability Modulo Theories (SMT) problem instead of a SAT one[7]. SMT problems are similar to SAT but are easier to solve for bit vector operations, like additions[7].
+
+
+The verification process of the pentium 4 involved formal verification, which made possible to find around 200 bugs that weren't emphasized by simulation based verification methods[4].
 
 
 
@@ -132,7 +128,7 @@ Note that the RVFI interface doesn't support instructions that both read and wri
 
 
 
-As explained earlier, some operations are to hard to verify formally using the bounded model checking methodology. It is the case for the multiplication and division. it means that the Multiplier "M" standard RSC-V extension cannot be fully verified easily. The solution brought by `riscv-formal` is to replace such operations by alterative ones for instructions that cannot be verified in a reasonable time. It expects the processor under test to implement these alternative operations instead of the standard multiplication and division operations. Commutative operations like multiplication are replaced with addition followed by applying XOR with a bit mask that indicates the type of the operation. Non-commutative operations like division are replaced with subtraction followed by applying XOR with a bit mask that indicates the type of the operation. The bit masks are 64 bits wide. RV32 implementations only use the lower 32 bits of the bit masks.
+As explained earlier, some operations are to hard to verify formally using the bounded model checking methodology. It is the case for the multiplication and division. it means that the Multiplier "M" standard RSC-V extension cannot be fully verified easily. The solution brought by `riscv-formal` is to replace such operations by alterative ones for instructions that cannot be verified in a reasonable time. It expects the processor under test to implement these alternative operations instead of the standard multiplication and division operations. Commutative operations like multiplication are replaced with addition followed by applying XOR with a b[7]it mask that indicates the type of the operation. Non-commutative operations like division are replaced with subtraction followed by applying XOR with a bit mask that indicates the type of the operation. The bit masks are 64 bits wide. RV32 implementations only use the lower 32 bits of the bit masks.
 
 Note that using alterative operations, no proof of correctness is given to the instruction. Other verification methods should then be used. The reason to use `riscv-formal` in such a case is that the only part that is not virified to be correct is the multiplier or the divisor. If the processor under verification uses a multiplier and a divisor that are already verified to be correct, it is not a problem. 
 
@@ -231,7 +227,7 @@ A read sequence happens when a handshake on the Read Response Channel follows a 
 
 A write sequence happens when handshakes on the Address Write and Data Write channels are followed by a handshake on the Write Response channel. Figure 3 shows the main AXI-lite signals. 
 
-Figure 4 and 5 show the dependancy between the channels for read and write sequences.
+Figure 4 and 5 show the dependency between the channels for read and write sequences. A simple arrow from A to B means that A and B must be asserted simultaneously. a double arrow from A and B to C means that if A and B are asserted simultaneously, C must eventually rise.
 
 
   
@@ -330,7 +326,7 @@ __Figure 5: Write transaction handshake dependencies, from the AXI Specification
 The `ARREADY`, `RVALID`, `AWREADY`, `WREADY` and `BVALID` signals are symbolic and still 
 
 
-`RRESP` and `BRESP` are not used by the `picorv32_axi` core, so they are not geneated by the slave. However, a core could make use of these signals to generate memory access exceptions. For such a core, it would be usefull to give it a symbolic value when `RVALID` and respectively `BVALID` are asserted.
+`RRESP` and `BRESP` are not used by the `picorv32_axi` core, so they are not generated by the slave. However, a core could make use of these signals to generate memory access exceptions. For such a core, it would be useful to give it a symbolic value when `RVALID` and respectively `BVALID` are asserted.
 
 
 ## 2.3. Verification
@@ -405,7 +401,7 @@ Once the RVFI port worked properly, we were able to use the `riscv-formal` tool 
 
 - Wrong trapping behaviour in some cases: when forwarding from memory, during stalls, while executing a JAL (Jump And Link) instruction.
 
-- BGE (Branch is Greater or Equal) and BGEU (Branch is Greater or Equal Unisgned) instructions only branched if strictly greater. These instructions were modified to branch if greater or equal.
+- BGE (Branch is Greater or Equal) and BGEU (Branch is Greater or Equal Unsigned) instructions only branched if strictly greater. These instructions were modified to branch if greater or equal.
 
 
 Once all these bugs were fixed, all tests passed: the core was verified to be correct in a bounded time: 30 cycles. This number is arbitrary but is high enough compared to the pipeline depth (which is 5).
@@ -415,11 +411,11 @@ The number of found bugs shows the power of formal verification: the buggy core 
 
 ## 3.4. Overview of the extension
 
-The goal of the RISC-V Bit Manipulation ISA extension is to accelerate some operations that are regularly executed in common RISC-V code. It is divided into three subextensions, for a total of 31 instructions (and 12 other instructions for rv64).
+The goal of the RISC-V Bit Manipulation ISA extension is to accelerate some operations that are regularly executed in common RISC-V code. It is divided into three sub-extensions, for a total of 31 instructions (and 12 other instructions for rv64).
 
 ### 3.4.1. Zba (Array Indexing)
 
-The Zba instructions are designed to accelerate the generation of addresses that index into arrays of basic types (halfword, word, doubleword). These instructions allow the addition of a shifted index to a base address. The shift amount is limited to 1, 2, or 3 but can be used to index arrays of wider elements by combining with the slli instruction from the base ISA.
+The Zba instructions are designed to accelerate the generation of addresses that index into arrays of basic types (half word, word, and double word). These instructions allow the addition of a shifted index to a base address. The shift amount is limited to 1, 2, or 3 but can be used to index arrays of wider elements by combining with the `SLLI` (Shift Left Logical by Immediate) instruction from the base ISA.
 
 ### 3.4.2. Zbb (Basic Bit-Manipulation)
 
@@ -431,7 +427,7 @@ The Zbs instructions provide operations to set, clear, invert or extract a singl
 
 ### 3.4.3. Zbc (Carry-less Multiplication)
 
-The Zbc extension provides carry-less multiplication, a multiplication operation in the polynomial ring over GF(2). This extension includes instructions clmul and clmulh to produce the lower and upper half of the carry-less product respectively. The instruction clmulr produces bits 2✕XLEN−2:XLEN-1 of the carry-less product. This extension can be used for efficient cryptography and hashing operations.
+The Zbc extension provides carry-less multiplication, a multiplication operation in the polynomial ring over GF(2). This extension includes instructions clmul and clmulh to produce the lower and upper half of the carry-less product respectively. The instruction clmulr produces bits 62:31 of the carry-less product. This extension can be used for efficient cryptography and hashing operations.
 
 
 
@@ -481,10 +477,10 @@ They are implemented using the regular ALU's full adder that is already used for
 ### 3.6.2. Implementing Zbb
 
 Simple Zbb operations are implemented naively:
-logical and, or and xor with negate, reverse byte order, byte granule bitwise OR-Combine, and sign- and zero- extend operations. Other instructions required area and timing considerations to be efficiently implemented.
+logical and, or and xor with negate, reverse byte order, byte granule bit-wise OR-Combine, and sign- and zero- extend operations. Other instructions required area and timing considerations to be efficiently implemented.
 
 
-### 3.6.3. Population count openrations
+### 3.6.3. Population count operations
 
 Operations that count bits (cpop, ctz and clz) are done in a single cycle.
 the data path for the computation is a tree that operates on a part of the word, and compresses to give the result.
@@ -623,11 +619,11 @@ __Figure 12: area analysis of the rv32ib core, with a single cycle `clmul`__
 ## 4.2. further work
 ### 4.2.1. riscv-formal
 
-`riscv-formal` is a promising open-source RISC-V bounded model checking verification tool. Though it lacks of support for multi-core  architectures, and supports few RISC-V extensions.
+`riscv-formal` is a promising open-source RISC-V bounded model checking verification tool. However it lacks of support for multi-core  architectures, and supports few RISC-V extensions.
 
 ### 4.2.2. PAF core
 
-The main contribution of this project is the verification and implementation of the rv32ib PAF core, as an exploration of the open source verification tool `riscv-formal`. It is to note that although the __bug hunting verification__ methodology is very useful in practice, it des not provide a complete correctness proof. 
+The main contribution of this project is the verification and implementation of the rv32ib PAF core, as an exploration of the open source verification tool `riscv-formal`. It is to note that although the __bug hunting verification__ methodology is very useful in practice, it does not provide a complete correctness proof. 
 
 Further work can be done to fully prove the core, using __unbounded model checking__ or __theorem proving__ methods. Besides, as briefly discussed in the synthesis analysis section, the implementation can be improved. The area and timing analysis lead highlight the following potential improvements:
 
@@ -650,10 +646,9 @@ It also lacks of an interrupt mechanism.
 
 4. Wagner I., Bertacco V., (2011). 'Verification of a Modern Processor'. In 'Post-Silicon and Runtime Verification for Modern Processors' (p. 4). New York: Springer. 
 
+5. Wagner I., Bertacco V., (2011). 'Verification of a Modern Processor'. In 'Post-Silicon and Runtime Verification for Modern Processors' (pp. 19-23). New York: Springer. 
+
+6. AMBA AXI and ACE Protocol Specification, ARM, 2011, (pp. 37-42)
 
 
-
-5. Post-Silicon and Runtime Verification for Modern Processors, Springer, by Ilya Wagner Valeria Bertacco,
-Springer Science+Business Media, LLC 2011 
-
-6. AMBA AXI and ACE Protocol Specification, ARM, 2011, pp. 37-42
+7. Cimatti A., Griggio A, Joost Schaafsma A., Sebastiani R, (2013). 'The MathSAT5 SMT Solver'. in 'International Conference on Tools and Algorithms for the Construction and Analysis of Systems'

@@ -101,11 +101,11 @@ __Figure 12: area analysis of the rv32ib core, with a single cycle `clmul`__
 ## 4.2. further work
 ### 4.2.1. riscv-formal
 
-`riscv-formal` is a promising open-source RISC-V bounded model checking verification tool. Though it lacks of support for multi-core  architectures, and supports few RISC-V extensions.
+`riscv-formal` is a promising open-source RISC-V bounded model checking verification tool. However it lacks of support for multi-core  architectures, and supports few RISC-V extensions.
 
 ### 4.2.2. PAF core
 
-The main contribution of this project is the verification and implementation of the rv32ib PAF core, as an exploration of the open source verification tool `riscv-formal`. It is to note that although the __bug hunting verification__ methodology is very useful in practice, it des not provide a complete correctness proof. 
+The main contribution of this project is the verification and implementation of the rv32ib PAF core, as an exploration of the open source verification tool `riscv-formal`. It is to note that although the __bug hunting verification__ methodology is very useful in practice, it does not provide a complete correctness proof. 
 
 Further work can be done to fully prove the core, using __unbounded model checking__ or __theorem proving__ methods. Besides, as briefly discussed in the synthesis analysis section, the implementation can be improved. The area and timing analysis lead highlight the following potential improvements:
 

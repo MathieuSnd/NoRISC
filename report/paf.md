@@ -54,7 +54,7 @@ Once the RVFI port worked properly, we were able to use the `riscv-formal` tool 
 
 - Wrong trapping behaviour in some cases: when forwarding from memory, during stalls, while executing a JAL (Jump And Link) instruction.
 
-- BGE (Branch is Greater or Equal) and BGEU (Branch is Greater or Equal Unisgned) instructions only branched if strictly greater. These instructions were modified to branch if greater or equal.
+- BGE (Branch is Greater or Equal) and BGEU (Branch is Greater or Equal Unsigned) instructions only branched if strictly greater. These instructions were modified to branch if greater or equal.
 
 
 Once all these bugs were fixed, all tests passed: the core was verified to be correct in a bounded time: 30 cycles. This number is arbitrary but is high enough compared to the pipeline depth (which is 5).
