@@ -99,7 +99,7 @@ module rvfi_wrapper (
 // operation request and the operation response.
 // It results in a 2N + 1 latency cycles.
 // 1-9 cycle axi write/read transactions
-`ifndef PICORV32_FAIRNESS
+`ifdef PICORV32_FAIRNESS
 
 localparam trans_max_lat = 4;
 

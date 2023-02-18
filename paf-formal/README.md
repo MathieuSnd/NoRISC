@@ -11,6 +11,6 @@ cd NoRISC
 mv paf-formal/verif-wrapper riscv-formal/cores/paf
 cd riscv-formal/cores/paf
 python3 ../../checks/genchecks.py
-make -C check 
+make -C checks 
 ```
 
