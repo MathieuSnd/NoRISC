@@ -9,7 +9,7 @@ As an example of use of this file to verify a core that uses an AXI-lite memory 
 ```
 git clone --recursive https://github.com/MathieuSnd/NoRISC
 cd NoRISC
-mv riscv-axi-formal/picorv32-axi riscv-formal/cores/picorv32-axi 
+mv riscv-axi-formal/ riscv-formal/cores/picorv32-axi 
 cd riscv-formal/cores/picorv32-axi
 wget -O picorv32.v https://raw.githubusercontent.com/YosysHQ/picorv32/master/picorv32.v
 python3 ../../checks/genchecks.py
