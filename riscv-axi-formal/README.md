@@ -11,7 +11,7 @@ git clone --recursive https://github.com/MathieuSnd/NoRISC
 cd NoRISC
 mv riscv-axi-formal/ riscv-formal/cores/picorv32-axi 
 cd riscv-formal/cores/picorv32-axi
-wget -O picorv32.v https://raw.githubusercontent.com/YosysHQ/picorv32/master/picorv32.v
+wget -O picorv32.v https://raw.githubusercontent.com/MathieuSnd/picorv32/master/picorv32.v
 python3 ../../checks/genchecks.py
 make -C checks -j$(nproc)
 ```
