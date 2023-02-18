@@ -1,6 +1,6 @@
 # RISC-V AXI Formal
 
-This directory gathers the resources to verify and use the formal axi-lite memory slave that always reads arbitrary values and answers in an arbitrary time. The code can be found (there)[rand_axi_slave.sv].
+This directory gathers the resources to verify and use the formal axi-lite memory slave that always reads arbitrary values and answers in an arbitrary time. The code can be found [there](rand_axi_slave.sv).
 
 
 
